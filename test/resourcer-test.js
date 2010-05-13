@@ -260,8 +260,12 @@ vows.describe('resourcer').addVows({
 }).addVows({ // CRUD
     "CRUD operations": {
         topic: function () {
-            resourcer.use(resourcer.engines.memory).connect(); 
-            resourcer.connection.put("bob", { id: 42 }, function () {});
+            var promise = new(events.EventEmitter);
+            resourcer.use(resourcer.engines.memory).connect().load({
+                bob: { id: 42, age: 35, hair: 'black'},
+                tim: { id: 43, age: 16, hair: 'brown'},
+                mat: { id: 44, age: 29, hair: 'black'}
+            });
         },
         "on the Resource factory": {
             topic: function () {
@@ -288,6 +292,30 @@ vows.describe('resourcer').addVows({
                     "should respond with an error": function (e, obj) {
                         assert.equal  (e.status, 404);
                         assert.typeOf (obj, "undefined");
+                    }
+                }
+            },
+            "a find request": {
+                "when successful": {
+                    topic: function (r) {
+                        return r.find({ hair: "black" });
+                    },
+                    "should respond with an array of length 2": function (e, obj) {
+                        assert.length (obj, 2);
+                    },
+                    "should respond with an array of Resource instances": function (e, obj) {
+                        assert.isArray (obj);
+                        assert.ok      (obj[0] instanceof resourcer.resources.Resource);
+                        assert.ok      (obj[1] instanceof resourcer.resources.Resource);
+                    }
+                },
+                "when unsuccessful": {
+                    topic: function (r) {
+                        return r.find({ hair: "blue" });
+                    },
+                    "should respond with an empty array": function (e, obj) {
+                        assert.isArray (obj);
+                        assert.length  (obj, 0)
                     }
                 }
             }
