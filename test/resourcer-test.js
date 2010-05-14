@@ -47,7 +47,7 @@ vows.describe('resourcer').addVows({
         },
         "returns an Article factory": {
             "with the resource name set": function (Article) {
-                assert.equal (Article.name, 'Article');
+                assert.equal (Article.resourceName, 'Article');
             },
             "and access to the `data` attribute": function (Article) {
                 assert.equal (Article.data, 42);
