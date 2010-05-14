@@ -15,7 +15,7 @@ var resourcer = require('resourcer');
 vows.describe('resourcer').addVows({
     "Resource()": {
         topic: function () {
-            return resourcer.Resource();
+            return resourcer.defineResource();
         },
         "returns a Resource factory": {
             "which is a function": function (Factory) {
@@ -41,8 +41,8 @@ vows.describe('resourcer').addVows({
     },
     "Resource('article') with a function": {
         topic: function () {
-            return resourcer.Resource('article', function () {
-                this.data = 42; 
+            return resourcer.defineResource('article', function () {
+                this.data = 42;
             });
         },
         "returns an Article factory": {
@@ -74,7 +74,7 @@ vows.describe('resourcer').addVows({
 }).addVows({ // API
     "Default Resource instances": {
         topic: function () {
-            return resourcer.Resource();
+            return resourcer.defineResource();
         },
         "have the `resource`, `property` and `define` methods": function (r) {
             assert.isFunction (r.resource);
@@ -94,7 +94,7 @@ vows.describe('resourcer').addVows({
 }).addVows({ // property
     "A Resource with a couple of properties": {
         topic: function () {
-            var r = resourcer.Resource();
+            var r = resourcer.defineResource();
             r.property('title');
             r.property('kind');
             return r;
@@ -107,7 +107,7 @@ vows.describe('resourcer').addVows({
     },
     "A Resource with duplicate properties": {
         topic: function () {
-            var r = resourcer.Resource();
+            var r = resourcer.defineResource();
             r.property('dup');
             r.property('dup');
             return r;
@@ -118,7 +118,7 @@ vows.describe('resourcer').addVows({
     },
     "The `property()` method": {
         topic: function () {
-            this.Resource = resourcer.Resource();    
+            this.Resource = resourcer.defineResource();
             return this.Resource.property('kind');
         },
         "returns an object which implements": {
@@ -171,7 +171,7 @@ vows.describe('resourcer').addVows({
         },
         "with a 'string' type": {
             topic: function () {
-                this.Resource = resourcer.Resource();    
+                this.Resource = resourcer.defineResource();
                 return this.Resource.property('kind', String);
             },
             "returns an object which implements": {
@@ -183,7 +183,7 @@ vows.describe('resourcer').addVows({
         },
         "with a 'number' type": {
             topic: function () {
-                this.Resource = resourcer.Resource();    
+                this.Resource = resourcer.defineResource();
                 return this.Resource.property('size', Number);
             },
             "returns an object which implements": {
@@ -201,23 +201,23 @@ vows.describe('resourcer').addVows({
     "Defining a Resource schema": {
         "with `property()`": {
             topic: function () {
-                var r = resourcer.Resource();    
+                var r = resourcer.defineResource();
                 r.property('title', String, { maxLength: 16 });
                 r.property('description', { maxLength: 32 });
                 return r;
             },
             "should add an entry to `properties`": function (r) {
-                assert.equal (r.properties.title.maxLength, 16); 
+                assert.equal (r.properties.title.maxLength, 16);
                 assert.equal (r.properties.description.maxLength, 32);
             },
             "should default to type:'string'": function (r) {
-                assert.equal (r.properties.title.type, "string"); 
-                assert.equal (r.properties.description.type, "string"); 
+                assert.equal (r.properties.title.type, "string");
+                assert.equal (r.properties.description.type, "string");
             }
         },
         "with `define()`": {
             topic: function () {
-                var r = resourcer.Resource();    
+                var r = resourcer.defineResource();
                 r.define({
                     properties: {
                         title: {
@@ -227,35 +227,35 @@ vows.describe('resourcer').addVows({
                         description: {
                             type: "string",
                             maxLength: 32
-                        } 
+                        }
                     }
                 });
                 return r;
             },
             "should add entries to `properties`": function (r) {
-                assert.equal (r.properties.title.maxLength, 16); 
+                assert.equal (r.properties.title.maxLength, 16);
                 assert.equal (r.properties.description.maxLength, 32);
             }
         },
         "by chaining attribute setters": {
             topic: function () {
-                var r = resourcer.Resource();
+                var r = resourcer.defineResource();
                 r.property('title').type('string')
                                    .maxLength(16)
                                    .minLength(0);
                 return r;
             },
             "should work just the same": function (r) {
-                assert.equal (r.properties.title.type, "string"); 
-                assert.equal (r.properties.title.maxLength, 16); 
-                assert.equal (r.properties.title.minLength, 0); 
+                assert.equal (r.properties.title.type, "string");
+                assert.equal (r.properties.title.maxLength, 16);
+                assert.equal (r.properties.title.minLength, 0);
             }
         }
     }
 }).addVows({
     "Storage engines": {
-    
-    
+
+
     }
 }).addVows({ // CRUD
     "Data queries": {
@@ -267,7 +267,7 @@ vows.describe('resourcer').addVows({
                         tim: { id: 43, age: 16, hair: 'brown'},
                         mat: { id: 44, age: 29, hair: 'black'}
                     });
-                    return resourcer.Resource();
+                    return resourcer.defineResource();
                 },
                 "a get() request": {
                     "when successful": {
@@ -329,13 +329,13 @@ vows.describe('resourcer').addVows({
             },
             "with user Resources": {
                 topic: function () {
-                    resourcer.resources.Article = resourcer.Resource('article');
+                    resourcer.resources.Article = resourcer.defineResource('article');
                     var connection = new(resourcer.engines.memory.Connection)('articles').load({
                         42: { id: 42, title: 'on flasks', resource: 'Article'},
                         43: { id: 43, title: 'on eras',   resource: 'Article'},
                         44: { id: 44, title: 'on people', resource: 'Article'}
                     });
-                    return resourcer.Resource(function () { this.connection = connection });
+                    return resourcer.defineResource(function () { this.connection = connection });
                 },
                 "a get() request": {
                     topic: function (r) {
@@ -354,14 +354,14 @@ vows.describe('resourcer').addVows({
             },
             "with heterogenous data": {
                 topic: function () {
-                    resourcer.resources.Article = resourcer.Resource('article');
+                    resourcer.resources.Article = resourcer.defineResource('article');
                     var connection = new(resourcer.engines.memory.Connection)('heterogenous').load({
                         42: { id: 42, title: 'on flasks', resource: 'Article'},
                         bob: { id: 42, age: 35, hair: 'black'},
                         tim: { id: 43, age: 16, hair: 'brown'},
                         44: { id: 44, title: 'on people', resource: 'Article'}
                     });
-                    return resourcer.Resource(function () { this.connection = connection });
+                    return resourcer.defineResource(function () { this.connection = connection });
                 },
                 "an all() request": {
                     topic: function (r) {
