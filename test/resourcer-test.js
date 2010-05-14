@@ -285,13 +285,13 @@ vows.describe('resourcer').addVows({
                         assert.equal (obj.id, 42);
                     }
                 },
-                "when unsuccessful": {
+                "an all() request": {
                     topic: function (r) {
-                        return r.get("david");
+                        return r.all();
                     },
-                    "should respond with an error": function (e, obj) {
-                        assert.equal  (e.status, 404);
-                        assert.typeOf (obj, "undefined");
+                    "should respond with an array of all records": function (e, obj) {
+                        assert.isArray (obj);
+                        assert.length  (obj, 3);
                     }
                 }
             },
