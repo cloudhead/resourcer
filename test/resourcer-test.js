@@ -378,11 +378,19 @@ vows.describe('resourcer').addVows({
         },
         "on a Resource instance": {
             topic: function () {
-                return new(resourcer.resources.Resource);
+                var conn = this.connection = new(resourcer.engines.memory.Connection)();
+                this.Resource = resourcer.defineResource(function () {
+                    this.connection = conn;
+                });
+                return new(this.Resource)({ id: 42, name: "bob" });
             },
-            "a find request": {
+            "a save query": {
                 topic: function (r) {
-                    //return r.get()
+                    return r.save();
+                },
+                "should save the document in the store": function (res) {
+                    assert.include (this.connection.store, '42');
+                    assert.equal   (this.connection.store[42].name, "bob");
                 }
             }
         }
