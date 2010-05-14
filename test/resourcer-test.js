@@ -258,31 +258,63 @@ vows.describe('resourcer').addVows({
     
     }
 }).addVows({ // CRUD
-    "CRUD operations": {
-        topic: function () {
-            var promise = new(events.EventEmitter);
-            resourcer.use(resourcer.engines.memory).connect().load({
-                bob: { id: 42, age: 35, hair: 'black'},
-                tim: { id: 43, age: 16, hair: 'brown'},
-                mat: { id: 44, age: 29, hair: 'black'}
-            });
-        },
+    "Data queries": {
         "on the Resource factory": {
-            topic: function () {
-                return resourcer.Resource();
-            },
-            "a get request": {
-                "when successful": {
-                    topic: function (r) {
-                        return r.get("bob");
+            "with default Resources": {
+                topic: function () {
+                    resourcer.use(resourcer.engines.memory).connect().load({
+                        bob: { id: 42, age: 35, hair: 'black'},
+                        tim: { id: 43, age: 16, hair: 'brown'},
+                        mat: { id: 44, age: 29, hair: 'black'}
+                    });
+                    return resourcer.Resource();
+                },
+                "a get() request": {
+                    "when successful": {
+                        topic: function (r) {
+                            return r.get("bob");
+                        },
+                        "should respond with a Resource instance": function (e, obj) {
+                            assert.isObject (obj);
+                            assert.ok       (obj instanceof resourcer.resources.Resource);
+                            assert.equal    (obj.constructor, resourcer.resources.Resource);
+                        },
+                        "should respond with the right object": function (e, obj) {
+                            assert.equal (obj.id, 42);
+                        }
                     },
-                    "should respond with a Resource instance": function (e, obj) {
-                        assert.isObject (obj);
-                        assert.ok       (obj instanceof resourcer.resources.Resource);
-                        assert.equal    (obj.constructor, resourcer.resources.Resource);
+                    "when unsuccessful": {
+                        topic: function (r) {
+                            return r.get("david");
+                        },
+                        "should respond with an error": function (e, obj) {
+                            assert.equal  (e.status, 404);
+                            assert.typeOf (obj, "undefined");
+                        }
+                    }
+                },
+                "a find() request": {
+                    "when successful": {
+                        topic: function (r) {
+                            return r.find({ hair: "black" });
+                        },
+                        "should respond with an array of length 2": function (e, obj) {
+                            assert.length (obj, 2);
+                        },
+                        "should respond with an array of Resource instances": function (e, obj) {
+                            assert.isArray (obj);
+                            assert.ok      (obj[0] instanceof resourcer.resources.Resource);
+                            assert.ok      (obj[1] instanceof resourcer.resources.Resource);
+                        }
                     },
-                    "should respond with the right object": function (e, obj) {
-                        assert.equal (obj.id, 42);
+                    "when unsuccessful": {
+                        topic: function (r) {
+                            return r.find({ hair: "blue" });
+                        },
+                        "should respond with an empty array": function (e, obj) {
+                            assert.isArray (obj);
+                            assert.length  (obj, 0)
+                        }
                     }
                 },
                 "an all() request": {
@@ -295,34 +327,58 @@ vows.describe('resourcer').addVows({
                     }
                 }
             },
-            "a find request": {
-                "when successful": {
-                    topic: function (r) {
-                        return r.find({ hair: "black" });
-                    },
-                    "should respond with an array of length 2": function (e, obj) {
-                        assert.length (obj, 2);
-                    },
-                    "should respond with an array of Resource instances": function (e, obj) {
-                        assert.isArray (obj);
-                        assert.ok      (obj[0] instanceof resourcer.resources.Resource);
-                        assert.ok      (obj[1] instanceof resourcer.resources.Resource);
-                    }
+            "with user Resources": {
+                topic: function () {
+                    resourcer.resources.Article = resourcer.Resource('article');
+                    var connection = new(resourcer.engines.memory.Connection)('articles').load({
+                        42: { id: 42, title: 'on flasks', resource: 'Article'},
+                        43: { id: 43, title: 'on eras',   resource: 'Article'},
+                        44: { id: 44, title: 'on people', resource: 'Article'}
+                    });
+                    return resourcer.Resource(function () { this.connection = connection });
                 },
-                "when unsuccessful": {
+                "a get() request": {
                     topic: function (r) {
-                        return r.find({ hair: "blue" });
+                        return r.get(42);
                     },
-                    "should respond with an empty array": function (e, obj) {
-                        assert.isArray (obj);
-                        assert.length  (obj, 0)
+                    "should respond with an Article instance": function (e, obj) {
+                        assert.isObject (obj);
+                        assert.ok       (obj instanceof resourcer.resources.Article);
+                        assert.equal    (obj.constructor, resourcer.resources.Article);
+                        assert.equal    (obj.resource, 'Article');
+                    },
+                    "should respond with the right object": function (e, obj) {
+                        assert.equal (obj.id, 42);
                     }
                 }
-            }
+            },
+            "with heterogenous data": {
+                topic: function () {
+                    resourcer.resources.Article = resourcer.Resource('article');
+                    var connection = new(resourcer.engines.memory.Connection)('heterogenous').load({
+                        42: { id: 42, title: 'on flasks', resource: 'Article'},
+                        bob: { id: 42, age: 35, hair: 'black'},
+                        tim: { id: 43, age: 16, hair: 'brown'},
+                        44: { id: 44, title: 'on people', resource: 'Article'}
+                    });
+                    return resourcer.Resource(function () { this.connection = connection });
+                },
+                "an all() request": {
+                    topic: function (r) {
+                        return r.all();
+                    },
+                    "should respond with a mix of Resource and Article instances": function (e, obj) {
+                        assert.equal (obj[0].constructor, resourcer.resources.Article);
+                        assert.equal (obj[1].constructor, resourcer.resources.Article);
+                        assert.equal (obj[2].constructor, resourcer.resources.Resource);
+                        assert.equal (obj[3].constructor, resourcer.resources.Resource);
+                    }
+                }
+            },
         },
         "on a Resource instance": {
             topic: function () {
-                return resourcer.Resource();
+                return new(resourcer.resources.Resource);
             },
             "a find request": {
                 topic: function (r) {
