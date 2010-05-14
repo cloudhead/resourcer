@@ -392,6 +392,14 @@ vows.describe('resourcer').addVows({
                     assert.include (this.connection.store, '42');
                     assert.equal   (this.connection.store[42].name, "bob");
                 }
+            },
+            "an update query": {
+                topic: function (r) {
+                    return r.update({ name: "bobby" });
+                },
+                "should save the document in the store": function (res) {
+                    assert.equal   (this.connection.store[42].name, "bobby");
+                }
             }
         }
     }
