@@ -54,7 +54,7 @@ vows.describe('resourcer/resource/filter').addVows({
                 this.filter('all', {});
                 this.filter('published', { published: true });
                 this.filter('by', function (author) { return { author: author } });
-            }); 
+            }).register();
         }, 
         "should respond to the filters": function (R) {
             assert.equal(R.connection.protocol, 'database');
