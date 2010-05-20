@@ -40,7 +40,7 @@ vows.describe('resourcer/resource/filter').addVows({
             })
             return promise;
         },
-        "Is created": function () {}
+        "is created": function () {}
     }
 }).addVows({
     "A Resource definition with filters": {
@@ -57,7 +57,6 @@ vows.describe('resourcer/resource/filter').addVows({
             }).register();
         }, 
         "should respond to the filters": function (R) {
-            assert.equal(R.connection.protocol, 'database');
             assert.isFunction (R.published);
             assert.isFunction (R.all);
             assert.isFunction (R.by);
@@ -65,24 +64,55 @@ vows.describe('resourcer/resource/filter').addVows({
         "can be used to query the database:": {
             "<published>": {
                 topic: function (Article) {
+                    this.Article = Article;
                     return Article.published();
                 },
                 "should return an array of all published Articles": function (res) {
+                    var that = this;
                     assert.isArray (res);
                     assert.length  (res, 3);
+                    res.forEach(function (d) {
+                        assert.isObject   (d);
+                        assert.instanceOf (d, that.Article);
+                        assert.equal      (d.constructor, that.Article);
+                        assert.equal      (d.resource, 'Article');
+                        assert.ok         (d.published);
+                    });
                 }
             },
-            "<published>": {
+            "<all>": {
                 topic: function (Article) {
-                    return Article.published();
+                    return Article.all();
                 },
                 "should return an array of all Article records": function (res) {
                     assert.isArray (res);
+                    assert.length  (res, 5);
+                }
+            },
+            "<by> 'cloudhead'": {
+                topic: function (Article) {
+                    return Article.by('cloudhead');
+                },
+                "should return an array of Article records by 'cloudhead'": function (res) {
+                    assert.isArray (res);
                     assert.length  (res, 3);
+                    res.forEach(function (d) {
+                        assert.isObject   (d);
+                        assert.equal      (d.resource, 'Article');
+                        assert.equal      (d.author,   'cloudhead');
+                    });
+                }
+            },
+            "<by> 'yoda'": {
+                topic: function (Article) {
+                    return Article.by('yoda');
+                },
+                "should return an array of Article records by 'yoda'": function (res) {
+                    assert.isArray (res);
+                    assert.length  (res, 1);
+                    assert.equal   (res[0].author, 'yoda');
                 }
             }
-        
-        
         }
     }
     
