@@ -18,7 +18,7 @@ vows.describe('resourcer').addVows({
         },
         "returns a Resource factory": {
             "which is a function": function (Factory) {
-                assert.typeOf (Factory, 'function');
+                assert.isFunction (Factory);
             },
             "and has the create/get/all/find methods": function (Factory) {
                 assert.isFunction (Factory.create);
@@ -191,8 +191,8 @@ vows.describe('resourcer').addVows({
                 "within": function (p) {},
             },
             "return an object which doesn't implement String 'definers'": function (p) {
-                assert.ok (! p.pattern);
-                assert.ok (! p.minLength);
+                assert.isUndefined (p.pattern);
+                assert.isUndefined (p.minLength);
             }
         }
     }
@@ -274,9 +274,9 @@ vows.describe('resourcer').addVows({
                             r.get("bob", this.callback);
                         },
                         "should respond with a Resource instance": function (e, obj) {
-                            assert.isObject (obj);
-                            assert.ok       (obj instanceof resourcer.resources.Resource);
-                            assert.equal    (obj.constructor, resourcer.resources.Resource);
+                            assert.isObject   (obj);
+                            assert.instanceOf (obj, resourcer.resources.Resource);
+                            assert.equal      (obj.constructor, resourcer.resources.Resource);
                         },
                         "should respond with the right object": function (e, obj) {
                             assert.equal (obj.id, 42);
@@ -287,8 +287,8 @@ vows.describe('resourcer').addVows({
                             r.get("david", this.callback);
                         },
                         "should respond with an error": function (e, obj) {
-                            assert.equal  (e.status, 404);
-                            assert.typeOf (obj, "undefined");
+                            assert.equal       (e.status, 404);
+                            assert.isUndefined (obj);
                         }
                     }
                 },
@@ -301,9 +301,9 @@ vows.describe('resourcer').addVows({
                             assert.length (obj, 2);
                         },
                         "should respond with an array of Resource instances": function (e, obj) {
-                            assert.isArray (obj);
-                            assert.ok      (obj[0] instanceof resourcer.resources.Resource);
-                            assert.ok      (obj[1] instanceof resourcer.resources.Resource);
+                            assert.isArray    (obj);
+                            assert.instanceOf (obj[0], resourcer.resources.Resource);
+                            assert.instanceOf (obj[1], resourcer.resources.Resource);
                         }
                     },
                     "when unsuccessful": {
@@ -341,10 +341,10 @@ vows.describe('resourcer').addVows({
                         return r.get(42);
                     },
                     "should respond with an Article instance": function (e, obj) {
-                        assert.isObject (obj);
-                        assert.ok       (obj instanceof resourcer.resources.Article);
-                        assert.equal    (obj.constructor, resourcer.resources.Article);
-                        assert.equal    (obj.resource, 'Article');
+                        assert.isObject   (obj);
+                        assert.instanceOf (obj, resourcer.resources.Article);
+                        assert.equal      (obj.constructor, resourcer.resources.Article);
+                        assert.equal      (obj.resource, 'Article');
                     },
                     "should respond with the right object": function (e, obj) {
                         assert.equal (obj.id, 42);

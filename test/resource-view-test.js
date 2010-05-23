@@ -17,7 +17,7 @@ var numberOfArticles = 5;
 
 resourcer.env = 'test';
 
-vows.describe('resourcer/resource/filter').addVows({
+vows.describe('resourcer/resource/view').addVows({
     "A database containing articles and other resources": {
         topic: function () {
             resourcer.use('database');
