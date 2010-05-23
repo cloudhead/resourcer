@@ -338,7 +338,7 @@ vows.describe('resourcer').addVows({
                 },
                 "a get() request": {
                     topic: function (r) {
-                        return r.get(42);
+                        r.get(42, this.callback);
                     },
                     "should respond with an Article instance": function (e, obj) {
                         assert.isObject   (obj);
