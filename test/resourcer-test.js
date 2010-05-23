@@ -5,8 +5,7 @@ var path = require('path'),
     http = require('http'),
     fs = require('fs');
 
-require.paths.unshift(path.join(__dirname, '..', 'lib'),
-                      path.join(__dirname, 'vendor', 'vows', 'lib'));
+require.paths.unshift(path.join(__dirname, '..', 'lib'));
 
 var vows = require('vows');
 
@@ -272,7 +271,7 @@ vows.describe('resourcer').addVows({
                 "a get() request": {
                     "when successful": {
                         topic: function (r) {
-                            return r.get("bob");
+                            r.get("bob", this.callback);
                         },
                         "should respond with a Resource instance": function (e, obj) {
                             assert.isObject (obj);
@@ -285,7 +284,7 @@ vows.describe('resourcer').addVows({
                     },
                     "when unsuccessful": {
                         topic: function (r) {
-                            return r.get("david");
+                            r.get("david", this.callback);
                         },
                         "should respond with an error": function (e, obj) {
                             assert.equal  (e.status, 404);
@@ -296,7 +295,7 @@ vows.describe('resourcer').addVows({
                 "a find() request": {
                     "when successful": {
                         topic: function (r) {
-                            return r.find({ hair: "black" });
+                            r.find({ hair: "black" }, this.callback);
                         },
                         "should respond with an array of length 2": function (e, obj) {
                             assert.length (obj, 2);
@@ -309,7 +308,7 @@ vows.describe('resourcer').addVows({
                     },
                     "when unsuccessful": {
                         topic: function (r) {
-                            return r.find({ hair: "blue" });
+                            r.find({ hair: "blue" }, this.callback);
                         },
                         "should respond with an empty array": function (e, obj) {
                             assert.isArray (obj);
@@ -319,7 +318,7 @@ vows.describe('resourcer').addVows({
                 },
                 "an all() request": {
                     topic: function (r) {
-                        return r.all();
+                        r.all(this.callback);
                     },
                     "should respond with an array of all records": function (e, obj) {
                         assert.isArray (obj);
@@ -365,7 +364,7 @@ vows.describe('resourcer').addVows({
                 },
                 "an all() request": {
                     topic: function (r) {
-                        return r.all();
+                        r.all(this.callback);
                     },
                     "should respond with a mix of Resource and Article instances": function (e, obj) {
                         assert.equal (obj[0].constructor, resourcer.resources.Article);
@@ -386,7 +385,7 @@ vows.describe('resourcer').addVows({
             },
             "a save query": {
                 topic: function (r) {
-                    return r.save();
+                    r.save(this.callback);
                 },
                 "should save the document in the store": function (res) {
                     assert.include (this.connection.store, '42');
@@ -394,7 +393,7 @@ vows.describe('resourcer').addVows({
                 },
                 "and an update query": {
                     topic: function (r) {
-                        return r.update({ name: "bobby" });
+                        r.update({ name: "bobby" }, this.callback);
                     },
                     "should update the document": function (res) {
                         assert.equal (this.connection.store[42].name, "bobby");

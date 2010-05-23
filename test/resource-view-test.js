@@ -5,8 +5,7 @@ var path = require('path'),
     http = require('http'),
     fs = require('fs');
 
-require.paths.unshift(path.join(__dirname, '..', 'lib'),
-                      path.join(__dirname, 'vendor', 'vows', 'lib'));
+require.paths.unshift(path.join(__dirname, '..', 'lib'));
 
 var cradle = require('vendor/cradle/lib/cradle');
 
@@ -65,7 +64,7 @@ vows.describe('resourcer/resource/filter').addVows({
             "<published>": {
                 topic: function (Article) {
                     this.Article = Article;
-                    return Article.published();
+                    Article.published(this.callback);
                 },
                 "should return an array of all published Articles": function (res) {
                     var that = this;
@@ -82,7 +81,7 @@ vows.describe('resourcer/resource/filter').addVows({
             },
             "<all>": {
                 topic: function (Article) {
-                    return Article.all();
+                    Article.all(this.callback);
                 },
                 "should return an array of all Article records": function (res) {
                     assert.isArray (res);
@@ -91,7 +90,7 @@ vows.describe('resourcer/resource/filter').addVows({
             },
             "<by> 'cloudhead'": {
                 topic: function (Article) {
-                    return Article.by('cloudhead');
+                    Article.by('cloudhead', this.callback);
                 },
                 "should return an array of Article records by 'cloudhead'": function (res) {
                     assert.isArray (res);
@@ -105,7 +104,7 @@ vows.describe('resourcer/resource/filter').addVows({
             },
             "<by> 'yoda'": {
                 topic: function (Article) {
-                    return Article.by('yoda');
+                    Article.by('yoda', this.callback);
                 },
                 "should return an array of Article records by 'yoda'": function (res) {
                     assert.isArray (res);
