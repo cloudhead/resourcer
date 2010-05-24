@@ -24,12 +24,12 @@ vows.describe('resourcer/events').addVows({
                 this.func = function (obj) {
                     that.obj = obj;
                 };
-                A.addListener('postCreate', this.func);
+                A.addListener('saveEnd', this.func);
                 return A;
             },
             "should add the bound method to factory's `listeners` array": function (A) {
-                 assert.isArray (A.listeners('postCreate'));
-                 assert.equal   (A.emitter.listeners('postCreate')[0], this.func);
+                 assert.isArray (A.listeners('saveEnd'));
+                 assert.equal   (A.emitter.listeners('saveEnd')[0], this.func);
             },
             "when calling save() on an instance of Article": {
                 topic: function (A) {
