@@ -261,7 +261,7 @@ vows.describe('resourcer').addVows({
         "on the Resource factory": {
             "with default Resources": {
                 topic: function () {
-                    resourcer.use(resourcer.engines.memory).connect().load({
+                    resourcer.use(resourcer.engines.memory).connect().connection.load({
                         bob: { id: 42, age: 35, hair: 'black'},
                         tim: { id: 43, age: 16, hair: 'brown'},
                         mat: { id: 44, age: 29, hair: 'black'}
