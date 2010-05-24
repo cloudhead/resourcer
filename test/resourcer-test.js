@@ -324,6 +324,18 @@ vows.describe('resourcer').addVows({
                         assert.isArray (obj);
                         assert.length  (obj, 3);
                     }
+                },
+                "a create() request": {
+                    topic: function (r) {
+                        r.create({ id: 99, age: 30, hair: 'red'}, this.callback);
+                    },
+                    "should respond with a `201`": function (e, res) {
+                        assert.equal (res.status, 201);
+                    },
+                    "should create the record in the db": function (e, res) {
+                        assert.isObject (resourcer.connection.store[99]);
+                        assert.equal    (resourcer.connection.store[99].age, 30);
+                    }
                 }
             },
             "with user Resources": {
@@ -391,9 +403,13 @@ vows.describe('resourcer').addVows({
                     assert.include (this.connection.store, '42');
                     assert.equal   (this.connection.store[42].name, "bob");
                 },
-                "and an update query": {
+                "a save() query": {
                     topic: function (r) {
-                        r.update({ name: "bobby" }, this.callback);
+                        r.save(this.callback);
+                    },
+                    "should save the document in the store": function (res) {
+                        assert.include (this.connection.store, '55');
+                        assert.equal   (this.connection.store[55].name, "fab");
                     },
                     "should update the document": function (res) {
                         assert.equal (this.connection.store[42].name, "bobby");
