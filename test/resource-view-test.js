@@ -7,7 +7,7 @@ var path = require('path'),
 
 require.paths.unshift(path.join(__dirname, '..', 'lib'));
 
-var cradle = require('vendor/cradle/lib/cradle');
+var cradle = require('cradle');
 
 var vows = require('vows');
 
