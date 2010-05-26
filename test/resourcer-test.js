@@ -46,7 +46,7 @@ vows.describe('resourcer').addVows({
         },
         "returns an Article factory": {
             "with the resource name set": function (Article) {
-                assert.equal (Article.resourceName, 'Article');
+                assert.equal (Article.resource, 'Article');
             },
             "and access to the `data` attribute": function (Article) {
                 assert.equal (Article.data, 42);
@@ -80,9 +80,12 @@ vows.describe('resourcer').addVows({
             return resourcer.defineResource();
         },
         "have the `resource`, `property` and `define` methods": function (r) {
-            assert.isFunction (r.resource);
+            assert.isString   (r.resource);
             assert.isFunction (r.property);
             assert.isFunction (r.define);
+        },
+        "resource should be set to 'Resource'": function (r) {
+            assert.equal (r.resource, 'Resource');
         },
         "the `properties` accessor returns an object with only the '_id' property": function (r) {
             assert.isObject (r.properties);
