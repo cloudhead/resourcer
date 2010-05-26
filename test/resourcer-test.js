@@ -66,6 +66,10 @@ vows.describe('resourcer').addVows({
                     assert.isFunction (article.save);
                     assert.isFunction (article.update);
                     assert.isFunction (article.destroy);
+                },
+                "and doesn't have a value for `id` and `key`": function (article) {
+                    assert.isUndefined (article.id);
+                    assert.isUndefined (article.key);
                 }
             }
         }
