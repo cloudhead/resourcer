@@ -80,14 +80,14 @@ vows.describe('resourcer').addVows({
             assert.isFunction (r.property);
             assert.isFunction (r.define);
         },
-        "the `properties` accessor returns an object with only the 'id' property": function (r) {
+        "the `properties` accessor returns an object with only the '_id' property": function (r) {
             assert.isObject (r.properties);
             assert.length   (Object.keys(r.properties), 1);
-            assert.include  (r.properties, 'id');
+            assert.include  (r.properties, '_id');
         },
         // Should it be a pointer to the 'id' property instead?
-        "the `key` accessor is set to 'id' by default": function (r) {
-            assert.equal (r.key, 'id');
+        "the `key` accessor is set to '_id' by default": function (r) {
+            assert.equal (r.key, '_id');
         }
     }
 }).addVows({ // property
@@ -262,9 +262,9 @@ vows.describe('resourcer').addVows({
             "with default Resources": {
                 topic: function () {
                     resourcer.use(resourcer.engines.memory).connect().connection.load({
-                        bob: { id: 42, age: 35, hair: 'black'},
-                        tim: { id: 43, age: 16, hair: 'brown'},
-                        mat: { id: 44, age: 29, hair: 'black'}
+                        bob: { _id: 42, age: 35, hair: 'black'},
+                        tim: { _id: 43, age: 16, hair: 'brown'},
+                        mat: { _id: 44, age: 29, hair: 'black'}
                     });
                     return resourcer.defineResource();
                 },
@@ -279,7 +279,7 @@ vows.describe('resourcer').addVows({
                             assert.equal      (obj.constructor, resourcer.resources.Resource);
                         },
                         "should respond with the right object": function (e, obj) {
-                            assert.equal (obj.id, 42);
+                            assert.equal (obj._id, 42);
                         }
                     },
                     "when unsuccessful": {
@@ -325,7 +325,7 @@ vows.describe('resourcer').addVows({
                 },
                 "a create() request": {
                     topic: function (r) {
-                        r.create({ id: 99, age: 30, hair: 'red'}, this.callback);
+                        r.create({ _id: 99, age: 30, hair: 'red'}, this.callback);
                     },
                     "should respond with a `201`": function (e, res) {
                         assert.equal (res.status, 201);
@@ -340,9 +340,9 @@ vows.describe('resourcer').addVows({
                 topic: function () {
                     resourcer.resources.Article = resourcer.defineResource('article');
                     var connection = new(resourcer.engines.memory.Connection)('articles').load({
-                        42: { id: 42, title: 'on flasks', resource: 'Article'},
-                        43: { id: 43, title: 'on eras',   resource: 'Article'},
-                        44: { id: 44, title: 'on people', resource: 'Article'}
+                        42: { _id: 42, title: 'on flasks', resource: 'Article'},
+                        43: { _id: 43, title: 'on eras',   resource: 'Article'},
+                        44: { _id: 44, title: 'on people', resource: 'Article'}
                     });
                     return resourcer.defineResource(function () { this.connection = connection });
                 },
@@ -357,7 +357,7 @@ vows.describe('resourcer').addVows({
                         assert.equal      (obj.resource, 'Article');
                     },
                     "should respond with the right object": function (e, obj) {
-                        assert.equal (obj.id, 42);
+                        assert.equal (obj._id, 42);
                     }
                 }
             },
@@ -365,10 +365,10 @@ vows.describe('resourcer').addVows({
                 topic: function () {
                     resourcer.resources.Article = resourcer.defineResource('article');
                     var connection = new(resourcer.engines.memory.Connection)('heterogenous').load({
-                        42: { id: 42, title: 'on flasks', resource: 'Article'},
-                        bob: { id: 42, age: 35, hair: 'black'},
-                        tim: { id: 43, age: 16, hair: 'brown'},
-                        44: { id: 44, title: 'on people', resource: 'Article'}
+                        42:  { _id: 42, title: 'on flasks', resource: 'Article'},
+                        bob: { _id: 42, age: 35, hair: 'black'},
+                        tim: { _id: 43, age: 16, hair: 'brown'},
+                        44:  { _id: 44, title: 'on people', resource: 'Article'}
                     });
                     return resourcer.defineResource(function () { this.connection = connection });
                 },
@@ -392,7 +392,7 @@ vows.describe('resourcer').addVows({
                     this.Resource = resourcer.defineResource(function () {
                         this.connection = conn;
                     });
-                    return new(this.Resource)({ id: 42, name: "bob" });
+                    return new(this.Resource)({ _id: 42, name: "bob" });
                 },
                 "the `isNewRecord` flag should be true": function (r) {
                     assert.strictEqual (r.isNewRecord, true);
@@ -431,7 +431,7 @@ vows.describe('resourcer').addVows({
                     this.User = resourcer.defineResource('User', function () {
                         this.connection = conn;
                     });
-                    return new(this.User)({ id: 55, name: "fab" });
+                    return new(this.User)({ _id: 55, name: "fab" });
                 },
                 "a save() query": {
                     topic: function (r) {
