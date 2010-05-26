@@ -3,5 +3,6 @@ test:
 	@@node test/events-test.js
 	@@node test/validator-test.js
 	@@node test/resource-view-test.js
+	@@node test/cache-test.js
 
 .PHONY: test
