@@ -44,4 +44,20 @@ vows.describe('resourcer/resource/cache').addVows({
             }
         }
     }
+}).addVows({
+    "When creating an instance, and saving it": {
+        topic: function () {
+            this.article = new(Article)({ _id: 43, title: "The Last Article" });
+            this.article.save(this.callback);
+        },
+        "and then clearing the cache and loading it back up with `get()`": {
+            topic: function () {
+                resourcer.cache.clear();
+                Article.get(43, this.callback);
+            },
+            "It should return a new instance": function (res) {
+                assert.notStrictEqual (res, this.article);
+            }
+        }
+    }
 });
