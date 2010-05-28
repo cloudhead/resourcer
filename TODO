@@ -1,5 +1,3 @@
-TODO
-====
 
 - Fix validator functions to throw TypeError instead of Error.
 - Make value of 'resource' field lowercase accross the board.
@@ -7,4 +5,4 @@ TODO
 - Turn the object cache into an LRU.
 - Implement *file* backend.
 - Implement *rest* backend.
-
+- Make sure we bypass the 'n+1' problem.
