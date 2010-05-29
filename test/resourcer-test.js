@@ -132,27 +132,27 @@ vows.describe('resourcer').addVows({
             "type": function (p) {
                 p.type('integer');
                 assert.equal  (p.property.type, "integer");
-                assert.throws (function () { p.type('unknwon') }, Error);
+                assert.throws (function () { p.type('unknwon') }, TypeError);
             },
             "optional": function (p) {
                 p.optional(true);
                 assert.equal  (p.property.optional, true);
-                assert.throws (function () { p.optional(1) }, Error);
+                assert.throws (function () { p.optional(1) }, TypeError);
             },
             "unique": function (p) {
                 p.unique(true);
                 assert.equal  (p.property.unique, true);
-                assert.throws (function () { p.unique(1) }, Error);
+                assert.throws (function () { p.unique(1) }, TypeError);
             },
             "title": function (p) {
                 p.title("the title");
                 assert.equal  (p.property.title, "the title");
-                assert.throws (function () { p.title(false) }, Error);
+                assert.throws (function () { p.title(false) }, TypeError);
             },
             "description": function (p) {
                 p.description("the description");
                 assert.equal  (p.property.description, "the description");
-                assert.throws (function () { p.title(false) }, Error);
+                assert.throws (function () { p.title(false) }, TypeError);
             },
             "format": function (p) {
                 p.format("email");
@@ -162,17 +162,17 @@ vows.describe('resourcer').addVows({
             "storageName": function (p) {
                 p.storageName("_kind");
                 assert.equal  (p.property.storageName, "_kind");
-                assert.throws (function () { p.storageName(21) }, Error);
+                assert.throws (function () { p.storageName(21) }, TypeError);
             },
             "conform": function (p) {
                 p.conform(function (kind) { kind !== "banana" });
                 assert.isFunction  (p.property.conform);
-                assert.throws      (function () { p.conform("banana") }, Error);
+                assert.throws      (function () { p.conform("banana") }, TypeError);
             },
             "lazy": function (p) {
                 p.lazy(true);
                 assert.equal  (p.property.lazy, true);
-                assert.throws (function () { p.lazy(1) }, Error);
+                assert.throws (function () { p.lazy(1) }, TypeError);
             },
         },
         "with a 'string' type": {
