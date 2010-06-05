@@ -163,4 +163,4 @@ vows.describe('resourcer/validator').addVows({
             },
         }
     }
-});
+}).export(module);

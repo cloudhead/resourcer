@@ -114,12 +114,6 @@ vows.describe('resourcer/resource/view').addVows({
             }
         }
     }
-    
-
-
-
-
-
-});
+}).export(module);
 
 

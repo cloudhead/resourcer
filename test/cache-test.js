@@ -60,4 +60,4 @@ vows.describe('resourcer/resource/cache').addVows({
             }
         }
     }
-});
+}).export(module);

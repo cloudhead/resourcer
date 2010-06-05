@@ -463,6 +463,6 @@ vows.describe('resourcer').addVows({
             }
         }
     }
-});
+}).export(module);
 
 

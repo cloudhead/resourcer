@@ -43,4 +43,4 @@ vows.describe('resourcer/events').addVows({
             
         }
     }
-});
+}).export(module);
