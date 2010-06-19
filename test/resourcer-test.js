@@ -8,6 +8,7 @@ var path = require('path'),
 require.paths.unshift(path.join(__dirname, '..', 'lib'));
 
 var vows = require('vows');
+var eyes = require('eyes');
 
 var resourcer = require('resourcer');
 
@@ -260,7 +261,30 @@ vows.describe('resourcer').addVows({
     }
 }).addVows({
     "Storage engines": {
-				
+				"using the database engine": {
+						"with the Resource factory": {
+								"with default Resources": {
+										topic: function () {
+												resourcer.env = 'test';
+												resourcer.use(resourcer.engines.database).connect();
+												eyes.inspect(resourcer.connection);
+                  			return resourcer.defineResource();
+										},
+										"a create() request": {
+												topic: function (r) {
+		                        r.create({ _id: 99, age: 30, hair: 'red'}, this.callback);
+		                    },
+		                    "should respond with a `201`": function (e, res) {
+		                        assert.equal (res.status, 201);
+		                    },
+		                    "should create the record in the db": function (e, res) {
+		                        assert.isObject (resourcer.connection.store[99]);
+		                        assert.equal    (resourcer.connection.store[99].age, 30);
+		                    }
+										}
+								}
+						}
+				}
     }
 }).addVows({ // CRUD
     "Data queries": {
