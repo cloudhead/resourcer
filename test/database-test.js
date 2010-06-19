@@ -55,10 +55,10 @@ vows.describe('resourcer/engines/database').addVows({
 		      	}
 				},*/
 				"a get() request": {
-						topic: function (r) {
-								return r.get('bob', this.callback);
-						},
 						"when successful": {
+								topic: function (r) {
+										return r.get('bob', this.callback);
+								},
 			      		"should respond with a Resource instance": function (e, obj) {
 										assert.isObject   (obj);
 			          		assert.instanceOf (obj, resourcer.resources.Resource);
@@ -73,7 +73,8 @@ vows.describe('resourcer/engines/database').addVows({
 			          		r.get("david", this.callback);
 			      		},
 			      		"should respond with an error": function (e, obj) {
-			          		assert.equal       (e.status, 404);
+										// Remark: Getting e.status === undefined instead of 404
+										assert.equal       (e.status, 404);
 			          		assert.isUndefined (obj);
 			      		}
 			  		}
