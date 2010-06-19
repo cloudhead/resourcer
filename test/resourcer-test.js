@@ -260,30 +260,7 @@ vows.describe('resourcer').addVows({
     }
 }).addVows({
     "Storage engines": {
-				"using the database engine": {
-						"with the Resource factory": {
-								"with default Resources": {
-										topic: function () {
-												resourcer.env = 'test';
-												resourcer.use(resourcer.engines.database).connect().connection.load([
-													{ _id: 'bob', age: 35, hair: 'black'},
-													{ _id: 'tim', age: 16, hair: 'brown'}
-												]);
-                  			return resourcer.defineResource();
-										},
-										"should load correctly": function (r) {
-												['bob', 'tim'].forEach(function (key){
-														r.get(key, function(e, obj){
-															assert.equal      (obj._id, key);
-															assert.isObject   (obj);
-	                            assert.instanceOf (obj, resourcer.resources.Resource);
-	                            assert.equal      (obj.constructor, resourcer.resources.Resource);
-														});
-												});
-										}
-								}
-						}
-				}
+				
     }
 }).addVows({ // CRUD
     "Data queries": {
