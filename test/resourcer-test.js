@@ -8,6 +8,8 @@ var path = require('path'),
 require.paths.unshift(path.join(__dirname, '..', 'lib'));
 
 var vows = require('vows');
+var eyes = require('eyes');
+var cradle = require('cradle');
 
 var resourcer = require('resourcer');
 
@@ -276,7 +278,8 @@ vows.describe('resourcer').addVows({
                             r.get("bob", this.callback);
                         },
                         "should respond with a Resource instance": function (e, obj) {
-                            assert.isObject   (obj);
+                            
+														assert.isObject   (obj);
                             assert.instanceOf (obj, resourcer.resources.Resource);
                             assert.equal      (obj.constructor, resourcer.resources.Resource);
                         },
