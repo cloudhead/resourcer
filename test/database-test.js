@@ -42,7 +42,7 @@ vows.describe('resourcer/engines/database').addVows({
 						this.use('database');
 					});
 				},
-				/*"a create() request": {
+				"a create() request": {
 						topic: function (r) {
 		          	r.create({ _id: 99, age: 30, hair: 'red'}, this.callback);
 		      	},
@@ -53,8 +53,8 @@ vows.describe('resourcer/engines/database').addVows({
 		          	assert.isObject (resourcer.connection.store[99]);
 		          	assert.equal    (resourcer.connection.store[99].age, 30);
 		      	}
-				},*/
-				"a get() request": {
+				},
+				/*"a get() request": {
 						"when successful": {
 								topic: function (r) {
 										return r.get('bob', this.callback);
@@ -78,6 +78,39 @@ vows.describe('resourcer/engines/database').addVows({
 			          		assert.isUndefined (obj);
 			      		}
 			  		}
-				}
+				},*/
+				/*"a find() request": {
+						// Remark: Database engine currently doesn't support 'find', should we add it?
+            "when successful": {
+                topic: function (r) {
+                    r.find({ hair: "black" }, this.callback);
+                },
+                "should respond with an array of length 2": function (e, obj) {
+                    assert.length (obj, 2);
+                },
+                "should respond with an array of Resource instances": function (e, obj) {
+                    assert.isArray    (obj);
+                    assert.instanceOf (obj[0], resourcer.resources.Resource);
+                    assert.instanceOf (obj[1], resourcer.resources.Resource);
+                }
+            },
+            "when unsuccessful": {
+                topic: function (r) { r.find({ hair: "blue" }, this.callback); },
+                "should respond with an empty array": function (e, obj) {
+                    assert.isArray (obj);
+                    assert.length  (obj, 0)
+                }
+            }
+        },
+        "an all() request": {
+            // Remark: Database engine currently doesn't support 'all', should we add it?
+						topic: function (r) {
+                r.all(this.callback);
+            },
+            "should respond with an array of all records": function (e, obj) {
+                assert.isArray (obj);
+                assert.length  (obj, 3);
+            }
+        },*/
 		}
 }).export(module);
