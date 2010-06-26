@@ -16,8 +16,6 @@ var resourcer = require('resourcer');
 vows.describe('resourcer/engines/database').addVows({
     "A database containing default resources": {
         topic: function () {
-            resourcer.env = 'test';
-            resourcer.use('database');
             var promise = new(events.EventEmitter);
             var db = new(cradle.Connection)().database('test');
             db.destroy(function () {
