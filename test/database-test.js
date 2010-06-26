@@ -47,7 +47,6 @@ vows.describe('resourcer/engines/database').addVows({
                 r.create({ _id: '99', age: 30, hair: 'red'}, this.callback);
             },
             "should respond with a `201`": function (e, res) {
-                require('sys').debug(require('sys').inspect(res))
                 assert.equal (res.status, 201);
             },
             //"should create the record in the db": {
