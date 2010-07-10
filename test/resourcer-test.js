@@ -258,6 +258,10 @@ vows.describe('resourcer').addVows({
             }
         }
     }
+}).addVows({
+    "Storage engines": {
+				
+    }
 }).addVows({ // CRUD
     "Data queries": {
         "on the Resource factory": {
