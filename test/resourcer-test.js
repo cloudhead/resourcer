@@ -418,7 +418,7 @@ vows.describe('resourcer').addVows({
                         assert.strictEqual (this.r.isNewRecord, false);
                     },
                     "and an update query": {
-                        topic: function (r) {
+                        topic: function (_, r) {
                             r.update({ name: "bobby" }, this.callback);
                         },
                         "should return a 200": function (res) {
@@ -450,7 +450,7 @@ vows.describe('resourcer').addVows({
                         assert.equal (this.connection.store[55].resource, "User");
                     },
                     "and an update query": {
-                        topic: function (r) {
+                        topic: function (_, r) {
                             r.update({ name: "bobby" }, this.callback);
                         },
                         "should update the document": function (res) {
