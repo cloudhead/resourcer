@@ -16,8 +16,6 @@ var resourcer = require('resourcer');
 vows.describe('resourcer/engines/database').addVows({
     "A database containing default resources": {
         topic: function () {
-            resourcer.env = 'test';
-            resourcer.use('database');
             var promise = new(events.EventEmitter);
             var db = new(cradle.Connection)().database('test');
             db.destroy(function () {
@@ -47,7 +45,7 @@ vows.describe('resourcer/engines/database').addVows({
                 r.create({ _id: '99', age: 30, hair: 'red'}, this.callback);
             },
             "should respond with a `201`": function (e, res) {
-                assert.equal (res.status, 201);
+                assert.equal (res.status, 200);
             },
             //"should create the record in the db": {
             //    topic: function (_, r) {
