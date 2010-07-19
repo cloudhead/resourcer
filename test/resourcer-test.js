@@ -419,7 +419,7 @@ vows.describe('resourcer').addVows({
                     },
                     "and an update query": {
                         topic: function (r) {
-                            r.update({ name: "bobby" }, this.callback);
+                            this.r.update({ name: "bobby" }, this.callback);
                         },
                         "should return a 200": function (res) {
                             assert.equal (res.status, 200);
@@ -440,6 +440,7 @@ vows.describe('resourcer').addVows({
                 },
                 "a save() query": {
                     topic: function (r) {
+                        this.r = r;
                         r.save(this.callback);
                     },
                     "should save the document in the store": function (res) {
@@ -451,7 +452,7 @@ vows.describe('resourcer').addVows({
                     },
                     "and an update query": {
                         topic: function (r) {
-                            r.update({ name: "bobby" }, this.callback);
+                            this.r.update({ name: "bobby" }, this.callback);
                         },
                         "should update the document": function (res) {
                             assert.equal (this.connection.store[55].name, "bobby");

@@ -36,6 +36,7 @@ vows.describe('resourcer/engines/database').addVows({
 }).addVows({
     "A default Resource factory" : {
         topic: function() {
+            resourcer.env = 'test';
             return resourcer.defineResource(function () {
                 this.use('database');
             });
@@ -45,7 +46,7 @@ vows.describe('resourcer/engines/database').addVows({
                 r.create({ _id: '99', age: 30, hair: 'red'}, this.callback);
             },
             "should respond with a `201`": function (e, res) {
-                assert.equal (res.status, 200);
+                assert.equal (res.status, 201);
             },
             //"should create the record in the db": {
             //    topic: function (_, r) {
