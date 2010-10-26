@@ -35,7 +35,7 @@ vows.describe('resourcer/events').addVows({
                 topic: function (A) {
                     new(A)({ _id: 64, title: 'an Article' }).save(this.callback);
                 },
-                "should trigger the bound function": function () {
+                "should trigger the bound function": function (e, res) {
                     assert.isObject (this.obj);
                 }
             
