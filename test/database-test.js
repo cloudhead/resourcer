@@ -20,7 +20,7 @@ vows.describe('resourcer/engines/database').addVows({
             var db = new(cradle.Connection)().database('test');
             db.destroy(function () {
                 db.create(function () {
-                    db.insert([
+                    db.save([
                         { _id: 'bob', age: 35, hair: 'black'},
                         { _id: 'tim', age: 16, hair: 'brown'},
                         { _id: 'mat', age: 29, hair: 'black'}

@@ -25,7 +25,7 @@ vows.describe('resourcer/resource/view').addVows({
             var db = new(cradle.Connection)().database('test');
             db.destroy(function () {
                 db.create(function () {
-                    db.insert([
+                    db.save([
                         { resource: 'Article', title: 'The Great Gatsby', published: true,  author: 'fitzgerald', tags: ['classic'] },    
                         { resource: 'Article', title: 'Finding vim',      published: false, author: 'cloudhead', tags: ['hacking', 'vi'] },    
                         { resource: 'Article', title: 'On Writing',       published: true,  author: 'cloudhead', tags: ['writing'] },    
