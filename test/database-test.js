@@ -36,10 +36,6 @@ vows.describe('resourcer/engines/database').addVows({
 }).addVows({
     "A default Resource factory" : {
         topic: function() {
-<<<<<<< HEAD
-=======
-            resourcer.env = 'test';
->>>>>>> 9b47af9b71b8f01883a7c6004550605599d9011c
             return resourcer.defineResource(function () {
                 this.use('database');
             });
