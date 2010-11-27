@@ -112,6 +112,23 @@ vows.describe('resourcer').addVows({
             assert.include (r.properties, 'title');
             assert.include (r.properties, 'kind');
         },
+        "When instantiated": {
+            topic: function (R) {
+                return new(R)({ title: 'The Great Gatsby' });
+            },
+            "should return the attributes, when `Object.keys` is called": function (r) {
+                var keys = Object.keys(r);
+                assert.include (keys, '_id');
+                assert.include (keys, 'title');
+                assert.include (keys, 'kind');
+                assert.include (keys, 'resource');
+                assert.length  (keys, 4);
+            },
+            "should set the unspecified values to `undefined`": function (r) {
+                assert.include     (r, 'kind');
+                assert.isUndefined (r.kind);
+            }
+        }
     },
     "A Resource with duplicate properties": {
         topic: function () {
