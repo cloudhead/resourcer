@@ -354,10 +354,12 @@ vows.describe('resourcer').addVows({
                 },
                 "a create() request": {
                     topic: function (r) {
+                        this.Factory = r;
                         r.create({ _id: 99, age: 30, hair: 'red'}, this.callback);
                     },
-                    "should respond with a `201`": function (e, res) {
-                        assert.equal (res.status, 201);
+                    "should return the newly created object": function (e, obj) {
+                        assert.instanceOf(obj, this.Factory);
+                        assert.equal(obj.id, 99);
                     },
                     "should create the record in the db": function (e, res) {
                         assert.isObject (resourcer.connection.store[99]);
