@@ -24,6 +24,7 @@ vows.describe('resourcer').addVows({
             },
             "and has the create/get/all/find methods": function (Factory) {
                 assert.isFunction (Factory.create);
+                assert.isFunction (Factory.destroy);
                 assert.isFunction (Factory.get);
                 assert.isFunction (Factory.all);
                 assert.isFunction (Factory.find);
@@ -115,6 +116,12 @@ vows.describe('resourcer').addVows({
         "When instantiated": {
             topic: function (R) {
                 return new(R)({ title: 'The Great Gatsby' });
+            },
+            "should respond to toString()": function (r) {
+                assert.equal (r.toString(), '{"title":"The Great Gatsby","resource":"Resource"}');
+            },
+            "should respond to toJSON()": function (r) {
+                assert.isObject (r.toJSON());
             },
             "should return the attributes, when `Object.keys` is called": function (r) {
                 var keys = Object.keys(r);
