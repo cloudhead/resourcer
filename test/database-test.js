@@ -44,18 +44,19 @@ vows.describe('resourcer/engines/database').addVows({
             topic: function (r) {
                 r.create({ _id: '99', age: 30, hair: 'red'}, this.callback);
             },
-            "should respond with a `201`": function (e, res) {
-                assert.equal (res.status, 201);
+            "should return the newly created object": function (e, obj) {
+                assert.instanceOf(obj, this.Factory);
+                assert.equal(obj.id, '99');
             },
-            //"should create the record in the db": {
-            //    topic: function (_, r) {
-            //        r.get(99, this.callback);
-            //    },
-            //    "which can then be retrieved": function (e, res) {
-            //        assert.isObject (resourcer.connection.store[99]);
-            //        assert.equal    (resourcer.connection.store[99].age, 30);
-            //    }
-            //}
+            "should create the record in the db": {
+                topic: function (_, r) {
+                    r.get(99, this.callback);
+                },
+                "which can then be retrieved": function (e, res) {
+                    assert.isObject (res);
+                    assert.equal    (res.age, 30);
+                }
+            }
         },
         /*"a get() request": {
             "when successful": {
