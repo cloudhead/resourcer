@@ -37,6 +37,7 @@ vows.describe('resourcer').addVows({
                     assert.isFunction (resource.save);
                     assert.isFunction (resource.update);
                     assert.isFunction (resource.destroy);
+                    assert.isFunction (resource.reload);
                 }
             }
         }
