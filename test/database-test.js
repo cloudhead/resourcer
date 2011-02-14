@@ -93,5 +93,26 @@ vows.describe('resourcer/engines/database').addVows({
                 assert.length  (obj, 4);
             }
         },
+        "an update() request": {
+            topic: function (r) {
+                this.cache = r.connection.cache;
+                r.update('bob', { age: 36 }, this.callback);
+            },
+            "should respond successfully": function (e, res) {
+                assert.isNull (e);
+            },
+            "followed by another update() request": {
+                topic: function (_, r) {
+                    r.update('bob', { age: 37 }, this.callback);
+                },
+                "should respond successfully": function (e, res) {
+                    assert.isNull (e);
+                },
+                "should save the latest revision to the cache": function (e, res) {
+                    assert.equal (this.cache.store['bob'].age, 37);
+                    assert.match (this.cache.store['bob']._rev, /^3-/);
+                }
+            }
+        }
     }
 }).export(module);
