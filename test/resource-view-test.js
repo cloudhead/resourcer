@@ -44,8 +44,7 @@ vows.describe('resourcer/resource/view').addVows({
 }).addVows({
     "A Resource definition with filters": {
         topic: function () {
-            var that = this;
-            resourcer.defineResource('Article', function () {
+            return resourcer.defineResource('Article', function () {
                 this.use('database');
                 this.property('author');
                 this.property('title');
@@ -54,10 +53,7 @@ vows.describe('resourcer/resource/view').addVows({
                 this.filter('all', {});
                 this.filter('published', { published: true });
                 this.filter('by', function (author) { return { author: author } });
-            }).register().on('init', function (R) {
-                // TODO: Don't wait for init
-                that.callback(null, R);
-            });
+            }).register();
         }, 
         "should respond to the filters": function (R) {
             assert.isFunction (R.published);
