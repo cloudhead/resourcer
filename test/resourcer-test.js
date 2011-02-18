@@ -448,9 +448,6 @@ vows.describe('resourcer').addVows({
                         topic: function (_, r) {
                             r.update({ name: "bobby" }, this.callback);
                         },
-                        "should return a 200": function (res) {
-                            assert.equal (res.status, 200);
-                        },
                         "should update the document": function (res) {
                             assert.equal (this.connection.store[42].name, "bobby");
                         }

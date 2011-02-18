@@ -79,7 +79,7 @@ vows.describe('resourcer/engines/database').addVows({
                 },
                 "should respond with an error": function (e, obj) {
                     assert.equal       (e.error, 'not_found');
-                    assert.equal       (e.status, 404);
+                    assert.equal       (e.headers.status, 404);
                     assert.isUndefined (obj);
                 }
             }
