@@ -33,14 +33,12 @@ vows.describe('resourcer/events').addVows({
             },
             "when calling save() on an instance of Article": {
                 topic: function (A) {
-                    new(A)({ _id: 64, title: 'an Article' }).save(this.callback);
+                    new(A)({ _id: '64', title: 'an Article' }).save(this.callback);
                 },
                 "should trigger the bound function": function (e, res) {
                     assert.isObject (this.obj);
                 }
-            
             }
-            
         }
     }
 }).export(module);
