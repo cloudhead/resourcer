@@ -13,6 +13,8 @@ var cradle = require('cradle');
 
 var resourcer = require('resourcer');
 
+resourcer.env = 'test';
+
 vows.describe('resourcer/engines/database').addVows({
     "A database containing default resources": {
         topic: function () {
@@ -24,19 +26,22 @@ vows.describe('resourcer/engines/database').addVows({
                         { _id: 'bob', age: 35, hair: 'black'},
                         { _id: 'tim', age: 16, hair: 'brown'},
                         { _id: 'mat', age: 29, hair: 'black'}
-                    ], function () {
-                        promise.emit('success');
+                    ], function (e, res) {
+                        promise.emit('success', res);
                     });
                 });
             })
             return promise;
         },
-        "is created": function () {}
+        "is created": function (e, obj) {
+            assert.isNull (e);
+            assert.isArray(obj);
+        }
     }
 }).addVows({
     "A default Resource factory" : {
         topic: function() {
-            return this.Factory = resourcer.defineResource(function () {
+            return this.Factory = resourcer.define('user', function () {
                 this.use('database');
             });
         },

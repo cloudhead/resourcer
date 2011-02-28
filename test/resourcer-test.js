@@ -81,7 +81,7 @@ vows.describe('resourcer').addVows({
 }).addVows({ // API
     "Default Resource instances": {
         topic: function () {
-            return resourcer.defineResource();
+            return resourcer.define();
         },
         "have the `resource`, `property` and `define` methods": function (r) {
             assert.isString   (r.resource);
@@ -89,7 +89,7 @@ vows.describe('resourcer').addVows({
             assert.isFunction (r.define);
         },
         "resource should be set to 'Resource'": function (r) {
-            assert.equal (r.resource, 'Resource');
+            assert.match (r.resource, /^Resource\d+/);
         },
         "the `properties` accessor returns an object with only the '_id' property": function (r) {
             assert.isObject (r.properties);
@@ -104,7 +104,7 @@ vows.describe('resourcer').addVows({
 }).addVows({ // property
     "A Resource with a couple of properties": {
         topic: function () {
-            var r = resourcer.defineResource();
+            var r = resourcer.define('book');
             r.property('title');
             r.property('kind');
             return r;
@@ -119,7 +119,7 @@ vows.describe('resourcer').addVows({
                 return new(R)({ title: 'The Great Gatsby' });
             },
             "should respond to toString()": function (r) {
-                assert.equal (r.toString(), '{"title":"The Great Gatsby","resource":"Resource"}');
+                assert.equal (r.toString(), '{"title":"The Great Gatsby","resource":"Book"}');
             },
             "should respond to toJSON()": function (r) {
                 assert.isObject (r.toJSON());
@@ -295,18 +295,18 @@ vows.describe('resourcer').addVows({
                         tim: { _id: 43, age: 16, hair: 'brown'},
                         mat: { _id: 44, age: 29, hair: 'black'}
                     });
-                    return resourcer.defineResource();
+                    return resourcer.defineResource('poop');
                 },
                 "a get() request": {
                     "when successful": {
                         topic: function (r) {
+                            this.Factory = r;
                             r.get("bob", this.callback);
                         },
                         "should respond with a Resource instance": function (e, obj) {
-                            
 														assert.isObject   (obj);
-                            assert.instanceOf (obj, resourcer.resources.Resource);
-                            assert.equal      (obj.constructor, resourcer.resources.Resource);
+                            assert.instanceOf (obj, resourcer.Resource);
+                            assert.equal      (obj.constructor, this.Factory);
                         },
                         "should respond with the right object": function (e, obj) {
                             assert.equal (obj._id, 42);
@@ -332,8 +332,8 @@ vows.describe('resourcer').addVows({
                         },
                         "should respond with an array of Resource instances": function (e, obj) {
                             assert.isArray    (obj);
-                            assert.instanceOf (obj[0], resourcer.resources.Resource);
-                            assert.instanceOf (obj[1], resourcer.resources.Resource);
+                            assert.instanceOf (obj[0], resourcer.Resource);
+                            assert.instanceOf (obj[1], resourcer.Resource);
                         }
                     },
                     "when unsuccessful": {
@@ -359,6 +359,7 @@ vows.describe('resourcer').addVows({
                         r.create({ _id: 99, age: 30, hair: 'red'}, this.callback);
                     },
                     "should return the newly created object": function (e, obj) {
+                        assert.strictEqual(obj.constructor, this.Factory);
                         assert.instanceOf(obj, this.Factory);
                         assert.equal(obj.id, 99);
                     },
@@ -406,13 +407,14 @@ vows.describe('resourcer').addVows({
                 },
                 "an all() request": {
                     topic: function (r) {
+                        this.Factory = r;
                         r.all(this.callback);
                     },
                     "should respond with a mix of Resource and Article instances": function (e, obj) {
                         assert.equal (obj[0].constructor, resourcer.resources.Article);
                         assert.equal (obj[1].constructor, resourcer.resources.Article);
-                        assert.equal (obj[2].constructor, resourcer.resources.Resource);
-                        assert.equal (obj[3].constructor, resourcer.resources.Resource);
+                        assert.equal (obj[2].constructor, this.Factory);
+                        assert.equal (obj[3].constructor, this.Factory);
                     }
                 }
             },
@@ -439,7 +441,7 @@ vows.describe('resourcer').addVows({
                         assert.equal   (this.connection.store[42].name, "bob");
                     },
                     "should set the `resource` attribute accordingly": function (res) {
-                        assert.equal (this.connection.store[42].resource, "Resource");
+                        assert.equal (this.connection.store[42].resource, this.Resource._resource);
                     },
                     "should set the `isNewRecord` flag to false": function () {
                         assert.strictEqual (this.r.isNewRecord, false);
@@ -457,7 +459,7 @@ vows.describe('resourcer').addVows({
             "with a user resource": {
                 topic: function () {
                     var conn = this.connection = new(resourcer.engines.memory.Connection)();
-                    this.User = resourcer.defineResource('User', function () {
+                    this.User = resourcer.define('user', function () {
                         this.connection = conn;
                     });
                     return new(this.User)({ _id: 55, name: "fab" });
