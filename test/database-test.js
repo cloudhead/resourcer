@@ -53,6 +53,9 @@ vows.describe('resourcer/engines/database').addVows({
                 assert.instanceOf(obj, this.Factory);
                 assert.equal(obj.id, '99');
             },
+            "should assign the _rev property": function (e, obj) {
+                assert.isString(obj._rev);
+            },
             "should create the record in the db": {
                 topic: function (_, r) {
                     r.get(99, this.callback);
@@ -60,22 +63,61 @@ vows.describe('resourcer/engines/database').addVows({
                 "which can then be retrieved": function (e, res) {
                     assert.isObject (res);
                     assert.equal    (res.age, 30);
+                    assert.isString (res._rev);
+                },
+                "and updated": {
+                    topic: function (r) {
+                        r.update({ hair: 'blue'}, this.callback);
+                    },
+                    "which can then be retrieved": function (e, res) {
+                        assert.isObject (res);
+                        assert.equal    (res.hair, 'blue');
+                        assert.isString (res._rev);
+                    },
                 }
             }
         },
         "a get() request": {
-            "when successful": {
+            "focus: when successful": {
                 topic: function (r) {
                     return r.get('bob', this.callback);
                 },
                 "should respond with a Resource instance": function (e, obj) {
                     assert.isObject   (obj);
-                    assert.instanceOf (obj, resourcer.resources.Resource);
-                    assert.equal      (obj.constructor, resourcer.resources.Resource);
+                    assert.instanceOf (obj, resourcer.Resource);
+                    assert.equal      (obj.constructor, this.Factory);
+                },
+                "should include the _rev property": function (e, obj) {
+                    assert.isString(obj._rev);
                 },
                 "should respond with the right object": function (e, obj) {
                     assert.isNull (e);
                     assert.equal  (obj._id, 'bob');
+                },
+                "should store the object in the cache": function () {
+                    assert.isObject(this.Factory.connection.cache.store['bob']);
+                    assert.isString(this.Factory.connection.cache.store['bob']._rev);
+                },
+                "followed by an update() request": {
+                    topic: function (r) {
+                        return r.update({ nails: 'long' }, this.callback);
+                    },
+                    "should respond successfully": function (e, obj) {
+                        assert.isNull (e);
+                        assert.ok     (obj);
+                    },
+                    "followed by another update() request": {
+                        topic: function (_, r) {
+                            r.update({ age: 37 }, this.callback);
+                        },
+                        "should respond successfully": function (e, res) {
+                            assert.isNull (e);
+                        },
+                        "should save the latest revision to the cache": function (e, res) {
+                            assert.equal (this.Factory.connection.cache.store['bob'].age, 37);
+                            assert.match (this.Factory.connection.cache.store['bob']._rev, /^3-/);
+                        }
+                    }
                 }
             },
             "when unsuccessful": {
@@ -95,28 +137,16 @@ vows.describe('resourcer/engines/database').addVows({
             },
             "should respond with an array of all records": function (e, obj) {
                 assert.isArray (obj);
-                assert.length  (obj, 4);
+                assert.length  (obj, 3);
             }
         },
         "an update() request": {
             topic: function (r) {
                 this.cache = r.connection.cache;
-                r.update('bob', { age: 36 }, this.callback);
+                r.update('mat', { age: 30 }, this.callback);
             },
             "should respond successfully": function (e, res) {
                 assert.isNull (e);
-            },
-            "followed by another update() request": {
-                topic: function (_, r) {
-                    r.update('bob', { age: 37 }, this.callback);
-                },
-                "should respond successfully": function (e, res) {
-                    assert.isNull (e);
-                },
-                "should save the latest revision to the cache": function (e, res) {
-                    assert.equal (this.cache.store['bob'].age, 37);
-                    assert.match (this.cache.store['bob']._rev, /^3-/);
-                }
             }
         }
     }
